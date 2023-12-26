@@ -2,27 +2,18 @@
 
 class Application:
 
-    def __init__(self, ttk = None, tk = None, **kwargs):
+    def __init__(self, root = None, **kwargs):
+        
+        # Verifier si root n'est pas None
+        assert root != None, "Expected a root object, got None."
 
-        # Vérifier si tk est passer comme "None" ou non
-        assert tk != None, "Expected Tk class as argument, got None."
-        assert ttk != None, "Expected ttk class as argument, got None."
-
-        # Séparer les dictionnaires, un pour le "root", l'autre pour les propriétes divers
-        rootDict = {}
         miscDict = {"title": "Placeholder", "width": 640, "height": 480}
 
-        # Pour éviter d'appeler la fonction chaque tour de boucle
-        keysMisc = miscDict.keys()
-
         for _, (k, v) in enumerate(kwargs.items()):
-            if k in keysMisc:
-                miscDict.update({k: v})
-            else:
-                rootDict.update({k: v})
+            miscDict.update({k: v})
 
         # Set-up du "root"
-        self.__root = tk(**rootDict)
+        self.__root = root
         self.__title = miscDict["title"]
         self.__width = miscDict["width"]
         self.__height = miscDict["height"]
@@ -31,10 +22,11 @@ class Application:
         self.__root.title(self.__title)
         self.__root.geometry(f"{self.__width}x{self.__height}")
     
+
     # Boucle d'évènements de l'application
     def mainloop(self, n: int = 0) -> None:
         self.__root.mainloop(n)
-
+    
 
     # Getters/Setters
     

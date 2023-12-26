@@ -14,7 +14,9 @@ HEIGHT = 720
 
 # Initialisation
 
-app = Application(ttk, Tk, title = TITLE, width = WIDTH, height = HEIGHT)
+root = Tk()
+
+app = Application(root, title = TITLE, width = WIDTH, height = HEIGHT)
 
 
 # Boucle principale d'évènements
