@@ -1,10 +1,5 @@
 # Classe application
 
-import enum
-from tkinter import Tk
-from turtle import width
-
-
 class Application:
 
     def __init__(self, ttk = None, tk = None, **kwargs):
