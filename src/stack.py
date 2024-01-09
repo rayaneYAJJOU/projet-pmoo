@@ -1,11 +1,11 @@
 class Stack:
     """Classe pile pour le système des pages"""
 
-    def __init__(self, stack: list = None) -> None:
+    def __init__(self, stack: list = []) -> None:
         
         # Initialisation
-        self.__stack: list = stack if stack else []
-        self.__size: int = len(self.__stack)
+        self.__stack: list = stack
+        self.__size: int = len(stack)
     
     def push(self, element = None) -> None:
         if element:

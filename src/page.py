@@ -3,7 +3,7 @@ from importlib import util
 class Page:
     """Classe d'une page à charger"""
 
-    PAGES_PATH = "pages"
+    PAGES_PATH: str = "pages"
 
     def __init__(self, root = None, filename: str = "") -> None:
 
@@ -12,7 +12,7 @@ class Page:
         self.__root = root
 
         try:
-            spec = util.spec_from_file_location(filename, Page.PAGES_PATH+"\\"+filename)
+            spec = util.spec_from_file_location(filename, Page.PAGES_PATH + "\\" + filename)
             self.__module = util.module_from_spec(spec)
             spec.loader.exec_module(self.__module)
         except ImportError as e:

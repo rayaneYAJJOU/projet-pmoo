@@ -1,11 +1,11 @@
 class Queue:
     """Classe file pour le système des pages"""
 
-    def __init__(self, queue: list = None) -> None:
+    def __init__(self, queue: list = []) -> None:
         
         # Initialisation
-        self.__queue: list = queue if queue else []
-        self.__size: int = len(self.__queue)
+        self.__queue: list = queue
+        self.__size: int = len(queue)
     
     def queue(self, element = None) -> None:
         if element:

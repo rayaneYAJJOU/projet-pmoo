@@ -1,16 +1,25 @@
 from tkinter import messagebox
 from tkinter import ttk, Widget
+from importlib import util
+from time import sleep
 
 widgets: list[Widget] = []
 name: str = "Login"
 
-def func(root):
+spec = util.spec_from_file_location("database.py", "src\\database.py")
+database = util.module_from_spec(spec)
+spec.loader.exec_module(database)
+Database = database.Database
+
+def func(root, page):
+
+    db: Database = Database("test", "test.csv")
+
     def login():
         username = username_entry.get()
         password = password_entry.get()
 
-        # Replace this with your authentication logic
-        if username == "admin" and password == "password":
+        if db.contains(Username = lambda x : x == username, Password = lambda x : x == password):
             messagebox.showinfo("Login Successful", "Welcome, " + username + "!")
         else:
             messagebox.showerror("Login Failed", "Invalid username or password")
@@ -35,6 +44,9 @@ def func(root):
     login_button = ttk.Button(frame, text="Login", command=login)
     login_button.grid(row=2, columnspan=2, pady=10)
 
+    #test = ttk.Button(frame, text="click lol", command=clear)
+    #test.grid(row=3, column=3)
+
     # Add some padding between widgets
     frame.grid_rowconfigure(3, minsize=20)
 
@@ -44,6 +56,7 @@ def func(root):
     widgets.append(password_label)
     widgets.append(password_entry)
     widgets.append(login_button)
+    #widgets.append(test)
 
     # Center the frame in the window
     root.columnconfigure(0, weight=1)
