@@ -19,7 +19,9 @@ def main():
 
     root = TTk(theme = "equilux")
 
-    PageHandler.load_page(root, "login.py")
+    PageHandler.init(root)
+
+    PageHandler.load_page("login.py")
 
     app: Application = Application(root, title = TITLE, width = WIDTH, height = HEIGHT)
 

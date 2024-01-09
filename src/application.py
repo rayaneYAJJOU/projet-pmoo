@@ -21,7 +21,6 @@ class Application:
         self.__root.title(self.__title)
         self.__root.wm_minsize(width = self.__width, height = self.__height)
         self.__root.geometry(f"{self.__width}x{self.__height}")
-    
 
     # Boucle d'évènements de l'application
     def mainloop(self, n: int = 0) -> None:

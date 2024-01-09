@@ -5,11 +5,16 @@ class Page:
 
     PAGES_PATH: str = "pages"
 
-    def __init__(self, root = None, filename: str = "") -> None:
+    def __init__(self, root = None, filename: str = "", blank: bool = False) -> None:
 
         # Initialisation
         self.__filename: str = filename
         self.__root = root
+
+        if blank:
+            self.__name: str = "Blank"
+            self.__widgets: dict = dict()
+            return
 
         try:
             spec = util.spec_from_file_location(filename, Page.PAGES_PATH + "\\" + filename)
@@ -22,11 +27,19 @@ class Page:
         
         if self.__module:
             self.__name: str = self.__module.name
-            self.__widgets: list = self.__module.widgets
+            self.__module.root = self.__root
+    
+    @staticmethod
+    def BlankPage():
+        return Page(None, "", True)
+    
+    def __str__(self) -> str:
+        return f"Page: {self.__name}, in file: {self.__filename}, in memory address: {hex(id(self))}"
 
-    def load(self) -> int:
+    def load(self, preload: bool = False) -> int:
         try:
-            self.__module.func(self.__root)
+            self.__module.func(preload)
+            self.__widgets: dict[str] = self.__module.widgets
         except Exception as e:
             print(f"Error executing '{self.__filename}': {e}")
             return 1
@@ -34,8 +47,10 @@ class Page:
         return 0
     
     def clear(self) -> None:
-        for widget in self.__widgets:
+        for widget in self.__widgets.values():
             widget.destroy()
+        self.__widgets.clear()
+        self.__module.widgets.clear()
 
     # Getters/Setters
     
