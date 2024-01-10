@@ -9,7 +9,7 @@ class Queue:
 
     def __str__(self) -> str:
         if len(self.__queue) > 0:
-            return "Queue: [" + ", ".join(self.__queue[:-1]) + f"{self.__queue[-1]}]"
+            return "Queue: [" + ", ".join(map(str, self.__queue[:-1])) + f", {self.__queue[-1]}]"
         return "Queue: []"
     
     def __len__(self) -> int:
@@ -29,6 +29,10 @@ class Queue:
     def get_first_element(self):
         if len(self.__queue) > 0:
             return self.__queue[0]
+    
+    def get_second_element(self):
+        if len(self.__queue) > 1:
+            return self.__queue[1]
     
     def clear(self) -> None:
         self.__queue = []

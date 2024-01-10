@@ -8,7 +8,7 @@ class Stack:
     
     def __str__(self) -> str:
         if len(self.__stack) > 0:
-            return "Stack: [" + ", ".join(map(str, self.__stack[:-1])) + f"{self.__stack[-1]}]"
+            return "Stack: [" + ", ".join(map(str, self.__stack[:-1])) + f", {self.__stack[-1]}]"
         return "Stack: []"
     
     def __len__(self) -> int:
@@ -28,6 +28,10 @@ class Stack:
     def get_last_element(self):
         if len(self.__stack) > 0:
             return self.__stack[-1]
+    
+    def get_second_last_element(self):
+        if len(self.__stack) > 1:
+            return self.__stack[-2]
     
     def clear(self) -> None:
         self.__stack = []

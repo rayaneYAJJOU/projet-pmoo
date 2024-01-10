@@ -11,7 +11,7 @@ class Database:
         
         self.__name: str = name
         self.__filename: str = filename
-        self.__content: dict[list] = dict()
+        self.__content: dict[str, list] = dict()
         self.__header: list[str] = []
         self.__coltypes: list[int] = []
         self.__rows: list[list] = []
@@ -25,13 +25,22 @@ class Database:
     
     @staticmethod
     def __to_cols(header: list[str], rows: list[list]) -> dict[str, list]:
-        result: dict = dict()
+        result: dict[str, list] = dict()
         for h in header:
             result.update({h: []})
         for row in rows[1:]:
             for i, h in enumerate(header):
                 result[h].append(row[i])
         return result
+    
+    """@staticmethod
+    def __to_rows(header: list[str], cols: dict[str, list]) -> list[list]:
+        result: list[list] = [header]
+        for _ in cols[header[0]]:
+            result.append([])
+        for i, _, col in enumerate(cols.items()):
+            result[i] = [e for e in col]
+        return result"""
     
     @staticmethod
     def __update_cols(content: dict[str, list] = dict(), row: list = []) -> dict[str, list]:
@@ -117,8 +126,11 @@ class Database:
     def update(self) -> None:
         pass
 
-    def contains(self, **cond) -> None:
-        return len(self.select_condition(**cond)) > 0
+    def contains(self, **cond) -> bool:
+        result: dict[str] = self.select_condition(**cond)
+        if len(result) == 0:
+            return False
+        return len(result[self.__header[0]]) > 0
                 
     
     # Getters/Setters

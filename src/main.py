@@ -24,7 +24,7 @@ def main():
     PageHandler.load_page("login.py")
 
     app: Application = Application(root, title = TITLE, width = WIDTH, height = HEIGHT)
-
+    
     # Boucle principale d'évènements
     app.mainloop()
 

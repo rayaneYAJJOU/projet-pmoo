@@ -43,7 +43,6 @@ class Page:
         except Exception as e:
             print(f"Error executing '{self.__filename}': {e}")
             return 1
-        
         return 0
     
     def clear(self) -> None:
@@ -54,6 +53,9 @@ class Page:
 
     # Getters/Setters
     
+    def get_filename(self) -> str:
+        return self.__filename
+
     def get_name(self) -> str:
         return self.__name
     
