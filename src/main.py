@@ -3,7 +3,6 @@
 from ttkthemes import ThemedTk as TTk
 from application import Application
 from page_handler import PageHandler
-from database import Database
 
 
 # Constantes (valeurs par défaut)

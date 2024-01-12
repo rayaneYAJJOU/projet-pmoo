@@ -1,16 +1,15 @@
 class Queue:
     """Classe file pour le système des pages"""
 
-    def __init__(self, queue: list = []) -> None:
+    def __init__(self, queue: list = None) -> None:
         
         # Initialisation
-        self.__queue: list = queue
-        self.__size: int = len(queue)
+        self.__queue: list = queue if queue else []
 
     def __str__(self) -> str:
         if len(self.__queue) > 0:
             return "Queue: [" + ", ".join(map(str, self.__queue[:-1])) + f", {self.__queue[-1]}]"
-        return "Queue: []"
+        return f"Queue: [{self.__queue[0]}]" if len(self.__queue) > 0 else "Queue: []"
     
     def __len__(self) -> int:
         return len(self.__queue)
@@ -30,9 +29,9 @@ class Queue:
         if len(self.__queue) > 0:
             return self.__queue[0]
     
-    def get_second_element(self):
-        if len(self.__queue) > 1:
-            return self.__queue[1]
+    def get_last_element(self):
+        if len(self.__queue) > 0:
+            return self.__queue[-1]
     
     def clear(self) -> None:
         self.__queue = []

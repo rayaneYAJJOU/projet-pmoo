@@ -1,15 +1,15 @@
 class Stack:
     """Classe pile pour le système des pages"""
 
-    def __init__(self, stack: list = []) -> None:
+    def __init__(self, stack: list = None) -> None:
         
         # Initialisation
-        self.__stack: list = stack
+        self.__stack: list = stack if stack else []
     
     def __str__(self) -> str:
-        if len(self.__stack) > 0:
+        if len(self.__stack) > 1:
             return "Stack: [" + ", ".join(map(str, self.__stack[:-1])) + f", {self.__stack[-1]}]"
-        return "Stack: []"
+        return f"Stack: [{self.__stack[0]}]" if len(self.__stack) > 0 else "Stack: []"
     
     def __len__(self) -> int:
         return len(self.__stack)
@@ -29,6 +29,10 @@ class Stack:
         if len(self.__stack) > 0:
             return self.__stack[-1]
     
+    def get_first_element(self):
+        if len(self.__stack) > 0:
+            return self.__stack[0]
+        
     def get_second_last_element(self):
         if len(self.__stack) > 1:
             return self.__stack[-2]

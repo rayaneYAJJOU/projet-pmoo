@@ -10,10 +10,12 @@ class Page:
         # Initialisation
         self.__filename: str = filename
         self.__root = root
+        self.__session_id: int = hash(self.__filename)
+        self.__widgets: dict[str] = dict()
 
         if blank:
             self.__name: str = "Blank"
-            self.__widgets: dict = dict()
+            self.__widgets = dict()
             return
 
         try:
@@ -34,12 +36,11 @@ class Page:
         return Page(None, "", True)
     
     def __str__(self) -> str:
-        return f"Page: {self.__name}, in file: {self.__filename}, in memory address: {hex(id(self))}"
+        return f"Page: {self.__name} {self.__filename} {hex(id(self))}"
 
     def load(self, preload: bool = False) -> int:
         try:
-            self.__module.func(preload)
-            self.__widgets: dict[str] = self.__module.widgets
+            self.__widgets = self.__module.func(preload)
         except Exception as e:
             print(f"Error executing '{self.__filename}': {e}")
             return 1
@@ -52,6 +53,9 @@ class Page:
         self.__module.widgets.clear()
 
     # Getters/Setters
+    
+    def get_session_id(self) -> int:
+        return self.__session_id
     
     def get_filename(self) -> str:
         return self.__filename

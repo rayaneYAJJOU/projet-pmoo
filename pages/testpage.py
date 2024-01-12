@@ -12,7 +12,7 @@ Database = database.Database
 database: Database = Database("test", "test.csv")"""
 
 
-def func(preload: bool = False) -> None:
+def func(preload: bool = False) -> dict[str, Widget]:
 
     # Create a frame for better organization
     frame = ttk.Frame(root, padding=20)
@@ -30,6 +30,8 @@ def func(preload: bool = False) -> None:
 
     widgets.update({"frame": frame})
     widgets.update({"test_label": test_label})
+
+    return widgets
 
     # Center the frame in the window
     #root.columnconfigure(0, weight=1)

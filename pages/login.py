@@ -30,7 +30,7 @@ def login() -> None:
         messagebox.showerror("Login Failed", "Invalid username or password")
 
 
-def func(preload: bool = False) -> None:
+def func(preload: bool = False) -> dict[str, Widget]:
 
     # Create a frame for better organization
     frame = ttk.Frame(root, padding=20)
@@ -77,3 +77,5 @@ def func(preload: bool = False) -> None:
     # Center the frame in the window
     root.columnconfigure(0, weight=1)
     root.rowconfigure(0, weight=1)
+
+    return widgets
