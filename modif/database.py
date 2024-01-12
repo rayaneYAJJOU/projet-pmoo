@@ -72,7 +72,9 @@ def insert_initial_users():
     conn = sqlite3.connect('school_management.db')
     cursor = conn.cursor()
     for username, password, role in users:
-        cursor.execute("INSERT INTO Users (username, password, role) VALUES (?, ?, ?)", (username, password, role))
+        cursor.execute("SELECT id FROM Users WHERE username = ?", (username,))
+        if cursor.fetchone() is None:
+            cursor.execute("INSERT INTO Users (username, password, role) VALUES (?, ?, ?)", (username, password, role))
     conn.commit()
     conn.close()
 
