@@ -5,6 +5,7 @@ from database import login
 from admin import show_admin_interface
 from teacher import show_teacher_interface
 from student import show_student_interface
+import sqlite3
 
 def create_login_screen():
     window = tk.Tk()
@@ -21,6 +22,8 @@ def create_login_screen():
 
     # Function to handle login attempt
     def attempt_login():
+        conn = sqlite3.connect('school_management.db')
+        cursor = conn.cursor()
         username = username_entry.get()
         password = password_entry.get()
         user_role = login(username, password)
@@ -29,11 +32,18 @@ def create_login_screen():
             if user_role[0] == 'admin':
                 show_admin_interface()
             elif user_role[0] == 'teacher':
-                show_teacher_interface()
+                cursor.execute("SELECT id FROM Users WHERE username = ? AND password = ?",(username, password))
+                teacher_id=cursor.fetchall()[0][0]
+                show_teacher_interface(teacher_id)
             elif user_role[0] == 'student':
-                show_student_interface(student_id=1)  # Example student ID
+                cursor.execute("SELECT id FROM Users WHERE username = ? AND password = ?",(username, password))
+                student_id=cursor.fetchall()[0][0]
+                print("lid",student_id)
+                show_student_interface(student_id)
         else:
             messagebox.showerror("Login Failed", "Invalid username or password")
+        conn.commit()
+        conn.close()
 
     # Login button
     login_button = tk.Button(window, text="Login", command=attempt_login)

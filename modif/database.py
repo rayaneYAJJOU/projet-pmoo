@@ -56,6 +56,7 @@ def setup_database():
             id INTEGER PRIMARY KEY,
             student_id INTEGER,
             date TEXT NOT NULL,
+            present INTEGER,
             FOREIGN KEY (student_id) REFERENCES Students(id)
         )
     ''')
@@ -65,9 +66,7 @@ def setup_database():
 
 def insert_initial_users():
     users = [
-        ("admin", "admin123", "admin"),
-        ("teacher", "teacher123", "teacher"),
-        ("student", "student123", "student")
+        ("admin", "admin123", "admin")
     ]
     conn = sqlite3.connect('school_management.db')
     cursor = conn.cursor()
@@ -93,23 +92,20 @@ def insert_user(username, password, role):
     conn.commit()
     conn.close()
 
-def insert_teacher(name, subject):
+def insert_teacher(name, subject,username, password):
     conn = sqlite3.connect('school_management.db')
     cursor = conn.cursor()
     cursor.execute("INSERT INTO Teachers (name, subject) VALUES (?, ?)", (name, subject))
+    cursor.execute("INSERT INTO Users (username, password, role) VALUES (?, ?, 'student')", (username, password))
     conn.commit()
     conn.close()
 
-def insert_student(name, class_):
+def insert_student(name, class_,username, password):
     conn = sqlite3.connect('school_management.db')
     cursor = conn.cursor()
     cursor.execute("INSERT INTO Students (name, class) VALUES (?, ?)", (name, class_))
+    cursor.execute("INSERT INTO Users (username, password, role) VALUES (?, ?, 'student')", (username, password))
     conn.commit()
     conn.close()
 
 # Additional functions for managing courses, grades, and absences can be added here as needed.
-
-if __name__ == "__main__":
-    setup_database()
-    # Example: setup default admin account
-    insert_user("admin", "admin123", "admin")
