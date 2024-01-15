@@ -1,7 +1,70 @@
 # teacher.py
+import shutil
 import tkinter as tk
-from tkinter import messagebox
+import os
+from tkinter import messagebox, filedialog
 import sqlite3
+
+def show_pdf_files():
+    pdf_directory = 'cours'
+
+    all_files = os.listdir(pdf_directory)
+    pdf_files = [f for f in all_files if f.endswith('.pdf')]
+
+    if pdf_files:
+        messagebox.showinfo("PDF Files", "\n".join(pdf_files))
+    else:
+        messagebox.showinfo("PDF Files", "No PDF files found in the directory.")
+
+def upload_pdf():
+    file_path = filedialog.askopenfilename(filetypes=[("PDF files", "*.pdf")])
+
+    if file_path:
+        target_directory = 'cours'
+
+        file_name = file_path.split('/')[-1]
+
+        target_path = os.path.join(target_directory, file_name)
+
+        try:
+            shutil.copy(file_path, target_path)
+            messagebox.showinfo("Success", "PDF uploaded successfully")
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred: {e}")
+    else:
+        messagebox.showinfo("Cancelled", "No file selected")
+
+def modify_pdf():
+    file_path_to_replace = filedialog.askopenfilename(title="Select PDF to Modify", filetypes=[("PDF files", "*.pdf")])
+
+    if file_path_to_replace:
+        new_file_path = filedialog.askopenfilename(title="Select New PDF", filetypes=[("PDF files", "*.pdf")])
+
+        if new_file_path:
+            try:
+                shutil.copy(new_file_path, file_path_to_replace)
+                messagebox.showinfo("Success", "PDF modified successfully")
+            except Exception as e:
+                messagebox.showerror("Error", f"An error occurred: {e}")
+        else:
+            messagebox.showinfo("Cancelled", "No new file selected")
+    else:
+        messagebox.showinfo("Cancelled", "No file selected to modify")
+
+def delete_pdf():
+    file_path = filedialog.askopenfilename(title="Select PDF to Delete", filetypes=[("PDF files", "*.pdf")])
+
+    if file_path:
+        if messagebox.askyesno("Confirm Deletion", f"Are you sure you want to delete '{os.path.basename(file_path)}'?"):
+            try:
+                os.remove(file_path)
+                messagebox.showinfo("Success", "PDF deleted successfully")
+            except Exception as e:
+                messagebox.showerror("Error", f"An error occurred: {e}")
+        else:
+            messagebox.showinfo("Cancelled", "Deletion cancelled")
+    else:
+        messagebox.showinfo("Cancelled", "No file selected")
 
 def get_students():
     conn = sqlite3.connect('school_management.db')
@@ -38,7 +101,6 @@ def show_teacher_interface(t_id):
 
     # Add courses
 
-
     def submit_grade():
         student_name = selected_student.get()
         student_id = [student[0] for student in students if student[1] == student_name][0]
@@ -59,6 +121,12 @@ def show_teacher_interface(t_id):
     tk.Label(teacher_window, text="Absence date:").grid(row=3, column=2)
     absence_date_entry = tk.Entry(teacher_window)
     absence_date_entry.grid(row=3, column=3)
+
+    # Add buttons for PDF functionalities
+    tk.Button(teacher_window, text="Show PDF Files", command=show_pdf_files).grid(row=5, columnspan=2)
+    tk.Button(teacher_window, text="Upload PDF", command=upload_pdf).grid(row=6, columnspan=2)
+    tk.Button(teacher_window, text="Modify PDF", command=modify_pdf).grid(row=7, columnspan=2)
+    tk.Button(teacher_window, text="Delete PDF", command=delete_pdf).grid(row=8, columnspan=2)
 
     def submit_absence():
         student_name = selected_student.get()

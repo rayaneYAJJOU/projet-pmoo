@@ -3,6 +3,20 @@ import tkinter as tk
 from tkinter import messagebox
 import sqlite3
 
+def update_pers(o_user, n_user, name, password, n_class):
+    conn = sqlite3.connect('school_management.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT role FROM Users WHERE username = ?", (o_user,))
+    role = cursor.fetchall()[0]
+    cursor.execute("UPDATE Users SET password = ? WHERE username = ?", (password, o_user))
+    cursor.execute("UPDATE Users SET username = ? WHERE password = ?", (n_user, password))
+    if role == 'teacher':
+        cursor.execute("UPDATE Teachers SET name = ? AND subject = ? WHERE id = (SELECT id FROM Users WHERE username = ?)", (name, n_class, n_user))
+    else:
+        cursor.execute("UPDATE Students SET name = ? AND class = ? WHERE id = (SELECT id FROM Users WHERE username = ?)", (name, n_class, n_user))
+    conn.commit()
+    conn.close()
+
 def insert_teacher(name, subject, username, password):
     conn = sqlite3.connect('school_management.db')
     cursor = conn.cursor()
@@ -27,8 +41,8 @@ def insert_teacher(name, subject, username, password):
 
     info = cursor.fetchall()
     for s_id in info:
-        print(s_id)
-        cursor.execute("INSERT INTO Grades (grade, course_id, student_id, id) VALUES (?, ?, ?, ?)", (-1, s_id, s_id, s_id))
+        id = s_id[0]
+        cursor.execute("INSERT INTO Grades (grade, course_id, student_id, id) VALUES (?, ?, ?, ?)", (-1, id, id, id))
     conn.commit()
     conn.close()
     return False
@@ -111,10 +125,6 @@ def show_admin_interface():
     teacher_username_entry = tk.Entry(admin_window)
     teacher_username_entry.grid(row=0, column=3)
 
-    """tk.Label(admin_window, text="Teacher's id:").grid(row=0, column=4)
-    teacher_id_entry = tk.Entry(admin_window)
-    teacher_id_entry.grid(row=0, column=5)"""
-
     tk.Label(admin_window, text="Teacher's password:").grid(row=1, column=2)
     teacher_password_entry = tk.Entry(admin_window)
     teacher_password_entry.grid(row=1, column=3)
@@ -145,10 +155,6 @@ def show_admin_interface():
     tk.Label(admin_window, text="Student's username:").grid(row=3, column=2)
     student_username_entry = tk.Entry(admin_window)
     student_username_entry.grid(row=3, column=3)
-
-    """tk.Label(admin_window, text="Student's id:").grid(row=3, column=4)
-    student_id_entry = tk.Entry(admin_window)
-    student_id_entry.grid(row=3, column=5)"""
 
     tk.Label(admin_window, text="Student's password:").grid(row=4, column=2)
     student_password_entry = tk.Entry(admin_window)
@@ -187,6 +193,41 @@ def show_admin_interface():
             messagebox.showwarning("Warning", "All fields are required")
 
     tk.Button(admin_window, text="Delete User", command=delete_student).grid(row=7, columnspan=2)
+
+    tk.Label(admin_window, text="old username:").grid(row=10, column=0)
+    student_old_user_entry = tk.Entry(admin_window)
+    student_old_user_entry.grid(row=10, column=1)
+    
+    tk.Label(admin_window, text="new username:").grid(row=11, column=0)
+    student_new_user_entry = tk.Entry(admin_window)
+    student_new_user_entry.grid(row=11, column=1)
+    
+    tk.Label(admin_window, text="new name:").grid(row=12, column=2)
+    student_new_name_entry = tk.Entry(admin_window)
+    student_new_name_entry.grid(row=12, column=3)
+    
+    tk.Label(admin_window, text="new password:").grid(row=12, column=0)
+    student_new_password_entry = tk.Entry(admin_window)
+    student_new_password_entry.grid(row=12, column=1)
+    
+    tk.Label(admin_window, text="new class:").grid(row=13, column=0)
+    student_new_class_entry = tk.Entry(admin_window)
+    student_new_class_entry.grid(row=13, column=1)
+    
+    def upd_pers():
+        old_user = student_old_user_entry.get()
+        new_user = student_new_user_entry.get()
+        name = student_new_name_entry.get()
+        password = student_new_password_entry.get()
+        n_class = student_new_class_entry.get()
+        
+        if old_user and new_user and name and password and n_class:
+            update_pers(old_user, new_user, name, password, n_class)
+            messagebox.showinfo("Success", "Updated successfully")
+        else:
+            messagebox.showwarning("Warning", "All fields are required")
+    
+    tk.Button(admin_window, text="Update Student", command=upd_pers).grid(row=14, columnspan=2)
 
     admin_window.mainloop()
 
